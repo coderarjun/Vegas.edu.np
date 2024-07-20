@@ -359,7 +359,9 @@
                 <button class="option-btn" data-answer="0">Option 1</button>
                 <button class="option-btn" data-answer="1">Option 2</button>
                 <button class="option-btn" data-answer="2">Option 3</button>
+                <button class="option-btn" data-answer="3" style="display: none;">Option 4</button> <!-- Add this button -->
             </div>
+            
         </div>
         <div id="navigation">
             <button id="prev-btn">Previous</button>
@@ -623,19 +625,26 @@
             document.getElementById('timer').textContent = formattedTime;
         }
 
-        function loadQuestion(index) {
+
+            function loadQuestion(index) {
             const question = questions[index];
             document.getElementById('question-image').src = question.image;
+            
+            const audioElement = document.getElementById('question-audio');
             if (question.audio) {
-                document.getElementById('question-audio').src = question.audio;
-                document.getElementById('question-audio').style.display = 'block';
+                audioElement.src = question.audio;
+                audioElement.style.display = 'block';
             } else {
-                document.getElementById('question-audio').style.display = 'none';
+                audioElement.style.display = 'none';
             }
 
             optionBtns.forEach((btn, idx) => {
-                btn.textContent = question.options[idx];
-                btn.classList.remove('selected');
+                if (question.options[idx] !== undefined) {
+                    btn.style.display = 'block';
+                    btn.textContent = question.options[idx];
+                } else {
+                    btn.style.display = 'none';
+                }
             });
 
             if (userAnswers[index] !== undefined) {
