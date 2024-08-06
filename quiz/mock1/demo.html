@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Quiz</title>
+    <style>
+        #quiz-container {
+            width: 80%;
+            max-width: 800px;
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow-y: auto;
+        }
+
+        #quit-btn-top {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #FF0000;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        #quit-btn-top:hover {
+            background-color: #CC0000;
+        }
+
+        #question-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #question-image {
+            width: 45%;
+            height: auto;
+            max-height: 300px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        #options {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .option-btn:hover {
+            background-color: #7bf59f;
+        }
+
+        .selected {
+            background-color: #74f07c;
+            color: rgb(3, 3, 3);
+            font-weight: bold;
+        }
+
+        .correct {
+            background-color: green;
+            color: white;
+        }
+
+        .wrong {
+            background-color: red;
+            color: white;
+        }
+
+        #timer {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        #question-counter {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        #navigation button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        #navigation button:hover {
+            background-color: #0056b3;
+        }
+
+        #navigation button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #start-btn,
+        #start-test-btn,
+        #next-btn,
+        #prev-btn,
+        #review-btn,
+        #restart-btn,
+        #back-to-results-btn {
+            color: white;
+            padding: 13px 29px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            background-color: #007BFF;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        #results-summary {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        #review-container {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 20px;
+        }
+
+        #review-screen {
+            text-align: left;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        #review-container h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        #review-container img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        #review-container ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        #review-container li {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .ads {
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="quiz-container">
+        <button id="quit-btn-top">Quit</button>
+        <div id="start-screen">
+            <h1>Welcome to the Image Quiz</h1>
+            <button id="start-btn">Let's Play</button>
+        </div>
+        <div id="timer-screen" style="display: none;">
+            <h2>Timer will start when you click "Start Test"</h2>
+            <button id="start-test-btn">Start Test</button>
+        </div>
+        <div id="quiz-screen" style="display: none;">
+            <div id="timer">80:00</div>
+            <div id="question-counter">Question 1/5</div>
+            <div id="question-container">
+                <img id="question-image" src="" alt="Question Image">
+               
+                <div id="options">
+                    <audio id="question-audio" src="" controls></audio>
+                    <button class="option-btn" data-answer="0">Option 1</button>
+                    <button class="option-btn" data-answer="1">Option 2</button>
+                    <button class="option-btn" data-answer="2">Option 3</button>
+                    <button class="option-btn" data-answer="3" style="display: none;">Option 4</button> <!-- Add this button -->
+                </div>
+                
+            </div>
+            <div id="navigation">
+                <button id="prev-btn">Previous</button>
+                <button id="next-btn">Next</button>
+                <button id="submit-btn" style="background-color: red;">Submit</button>
+            </div>
+        </div>
+        <div id="results-screen" style="display: none;">
+            <h2><b><div id="output"></div></b></h2>
+            <p id="results-summary"></p>
+            <button id="review-btn">Review Answers</button>
+            <button id="restart-btn">Restart Quiz</button>
+        </div>
+        <div id="review-screen" style="display: none;">
+            <div id="review-container">
+                <!-- Review questions will be dynamically added here -->
+            </div>
+            <br><br><button id="back-to-results-btn">Back to Results</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const startBtn = document.getElementById('start-btn');
+            const startTestBtn = document.getElementById('start-test-btn');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            const quitBtnTop = document.getElementById('quit-btn-top');
+            const reviewBtn = document.getElementById('review-btn');
+            const restartBtn = document.getElementById('restart-btn');
+            const backToResultsBtn = document.getElementById('back-to-results-btn');
+            const optionBtns = document.querySelectorAll('.option-btn');
+
+            let timerInterval;
+            let timer = 4800; // 80 minutes in seconds
+            let currentQuestionIndex = 0;
+            let correctCount = 0;
+            const userAnswers = [];
+            const questions = [
+            {
+                    image: '1.png',
+                    options: ['さんぽします', 'ふります', 'やすみます'],
+                    correct: 0
+                },
+                {
+                    image: '2.png',
+                    options: ['さる', 'パンダ', 'うさぎ'],
+                    correct: 1
+                },
+                {
+                    image: '3.png',
+                    options: ['日本', 'ドイツ', 'ニュージーランド'],
+                    correct: 2
+                },
+                {
+                    image: '4.png',
+                    options: ['ぎゅうにゅう', 'ぎゅうにく', 'ぶたにく'],
+                    correct: 0
+                },
+                {
+                    image: '5.png',
+                    options: ['さとうをいれます', 'さとうをはいります', 'さとうをあげます'],
+                    correct: 1
+                },
+                {
+                    image: '6.png',
+                    options: ['パンをきります', 'パンをかきます', 'パンをあげます'],
+                    correct: 1
+                },
+                {
+                    image: '7.png',
+                    options: ['おこります', 'すわります', 'たちます'],
+                    correct: 1
+                },
+                {
+                    image: '8.png',
+                    options: ['バナナ', 'きゅうり', 'キャベツ'],
+                    correct: 1
+                },
+                {
+                    image: '9.png',
+                    options: ['ぶどう', 'すいか', 'バナナ'],
+                    correct: 1
+                },
+                {
+                    image: '10.png',
+                    options: ['せんたっき', 'せんたくき', 'そうじき'],
+                    correct: 1
+                },
+                {
+                    image: '11.png',
+                    options: ['人系', '人形', '入形'],
+                    correct: 1
+                },
+                {
+                    image: '12.png',
+                    options: ['先先', '先生', '制生'],
+                    correct: 1
+                },
+                {
+                    image: '13.png',
+                    options: ['八百屋', '八百家', '八千屋'],
+                    correct: 1
+                },
+                {
+                    image: '14.png',
+                    options: ['来週', '先週', '今週'],
+                    correct: 1
+                },
+                {
+                    image: '15.png',
+                    options: ['花美', '花火', '花日'],
+                    correct: 1
+                },
+                {
+                    image: '16.png',
+                    options: ['ろくさつ', 'ろくまい', 'ろくにん'],
+                    correct: 1
+                },
+                {
+                    image: '17.png',
+                    options: ['見', '見た', '見ます'],
+                    correct: 1
+                },
+                {
+                    image: '18.png',
+                    options: ['あまり', 'まで', 'で'],
+                    correct: 1
+                },
+                {
+                    image: '19.png',
+                    options: ['は・の', 'か・か', 'の・の'],
+                    correct: 1
+                },
+                {
+                    image: '20.png',
+                    options: ['たかくて', 'たかい', 'たかく'],
+                    correct: 1
+                },
+                {
+                    image: '21.png',
+                    options: ['か・か', 'に・か', 'へ・が'],
+                    correct: 1
+                },
+                {
+                    image: '22.png',
+                    options: ['あります・します', 'します・あります', 'います・します'],
+                    correct: 1
+                },
+                {
+                    image: '23.png',
+                    options: ['だれ', 'いつ', 'どこ'],
+                    correct: 1
+                },
+                {
+                    image: '24.png',
+                    options: ['が・は', 'の・が', 'に・に '],
+                    correct: 1
+                },
+                {
+                    image: '25.png',
+                    audio: '25.mp3',
+                    options: ['a', 'b', 'c'],
+                    correct: 1
+                },
+                {
+                    image: '26.png',
+                    audio: '26.mp3',
+                    options: ['a', 'b', 'c'],
+                    correct: 1
+                },
+                {
+                    image: '27.png',
+                    audio: '27.mp3',
+                    options: ['a', 'b', 'c'],
+                    correct: 1
+                },
+                {
+                    image: '28.png',
+                    audio: '28.mp3',
+                    options: ['さとうをいれます', 'さとうをはいります', 'さとうをあげます'],
+                    correct: 1
+                },
+                {
+                    image: '29.png',
+                    audio: '29.mp3',
+                    options: ['a', 'b', 'c'],
+                    correct: 1
+                },
+                {
+                    image: '30.png',
+                    audio: '30.mp3',
+                    options: ['さとうをいれます', 'さとうをはいります', 'さとうをあげます'],
+                    correct: 1
+                },
+                {
+                    image: '31.png',
+                    audio: '31.mp3',
+                    options: ['a', 'b', 'c'],
+                    correct: 1
+                },
+                {
+                    image: '32.png',
+                    
+                    options: ['さとうをいれます', 'さとうをはいります', 'さとうをあげます'],
+                    correct: 1
+                },
+                {
+                    image: '33.png',
+                    
+                    options: ['さとうをいれます', 'さとうをはいります', 'さとうをあげます'],
+                    correct: 1
+                },
+                {
+                    image: '34.png',
+                    
+                    options: ['さとうをいれます', 'さとうをはいります', 'さとうをあげます'],
+                    correct: 1
+                },
+                {
+                    image: '35.png',
+                    
+                    options: ['誕生日だったこと', 'プレゼントをもらったこと', 'ケーキを食べたこと '],
+                    correct: 1
+                }
+                ,
+                {
+                    image: '36.png',
+                    
+                    options: ['ケーキは山田さんからもらいました', '私は今35才です', '山田さんは スマートフォンカワ―とチンさんはかわいいキーホルダーをくれました'],
+                    correct: 1
+                }
+
+                // Add more questions here
+            ];
+   
+
+
+            function startTimer() {
+                timerInterval = setInterval(() => {
+                    timer--;
+                    if (timer <= 0) {
+                        clearInterval(timerInterval);
+                        endQuiz();
+                    }
+                    updateTimerDisplay();
+                }, 1000);
+            }
+
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timer / 60);
+                const seconds = timer % 60;
+                const formattedTime = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                document.getElementById('timer').textContent = formattedTime;
+            }
+
+           // for single selection
+    function loadQuestion(index) {
+    const question = questions[index];
+    document.getElementById('question-image').src = question.image;
+    
+    const audioElement = document.getElementById('question-audio');
+    if (question.audio) {
+        audioElement.src = question.audio;
+        audioElement.style.display = 'block';
+    } else {
+        audioElement.style.display = 'none';
+    }
+
+    // Clear 'selected' class from all options
+    optionBtns.forEach(btn => btn.classList.remove('selected'));
+
+    optionBtns.forEach((btn, idx) => {
+        if (question.options[idx] !== undefined) {
+            btn.style.display = 'block';
+            btn.textContent = question.options[idx];
+            // Add 'selected' class if the option was previously selected
+            if (userAnswers[index] === idx) {
+                btn.classList.add('selected');
+            }
+        } else {
+            btn.style.display = 'none';
+        }
+    });
+
+    updateQuestionCounter(); // Update question counter
+}
+// for single selection
+            function updateQuestionCounter() {
+                const counterElement = document.getElementById('question-counter');
+                counterElement.textContent = `Question ${currentQuestionIndex + 1}/${questions.length}`;
+            }
+
+            function showScreen(screenId) {
+                const screens = document.querySelectorAll('#quiz-container > div');
+                screens.forEach(screen => {
+                    screen.style.display = 'none';
+                });
+                document.getElementById(screenId).style.display = 'block';
+            }
+
+            function endQuiz() {
+                clearInterval(timerInterval);
+
+                // Calculate correct answers
+                correctCount = 0;
+                questions.forEach((question, index) => {
+                    if (userAnswers[index] === question.correct) {
+                        correctCount++;
+                    }
+                });
+
+                const totalQuestions = questions.length;
+                const resultsSummary = `You got ${correctCount} out of ${totalQuestions} questions correct.`;
+                document.getElementById('results-summary').textContent = resultsSummary;
+
+                showScreen('results-screen');
+            }
+
+            startBtn.addEventListener('click', () => {
+                showScreen('timer-screen');
+            });
+
+            startTestBtn.addEventListener('click', () => {
+                showScreen('quiz-screen');
+                loadQuestion(currentQuestionIndex);
+                startTimer();
+            });
+
+            quitBtnTop.addEventListener('click', () => {
+                if (confirm('Are you sure you want to quit the quiz?')) {
+                    window.location.href = "../quiz.html";
+                }
+            });
+
+         // for single selection
+         optionBtns.forEach((btn, index) => {
+    btn.addEventListener('click', () => {
+        // Remove 'selected' class from all options
+        optionBtns.forEach(btn => btn.classList.remove('selected'));
+        
+        // Add 'selected' class to the clicked option
+        btn.classList.add('selected');
+
+        // Save the user's answer
+        userAnswers[currentQuestionIndex] = index;
+    });
+});
+// for single selection
+
+
+            prevBtn.addEventListener('click', () => {
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    loadQuestion(currentQuestionIndex);
+                }
+                updateNavigationButtons();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentQuestionIndex < questions.length - 1) {
+                    currentQuestionIndex++;
+                    loadQuestion(currentQuestionIndex);
+                }
+                updateNavigationButtons();
+            });
+
+            submitBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to submit the quiz?')) {
+                    endQuiz();
+                }
+            });
+
+            function updateNavigationButtons() {
+                prevBtn.disabled = currentQuestionIndex === 0;
+                nextBtn.disabled = currentQuestionIndex === questions.length - 1;
+            }
+
+            reviewBtn.addEventListener('click', () => {
+                showScreen('review-screen');
+                const reviewContainer = document.getElementById('review-container');
+                reviewContainer.innerHTML = '';
+                questions.forEach((question, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.innerHTML = `
+                        <h3>Question ${index + 1}</h3>
+                        <img src="${question.image}" alt="Question Image">
+                        <audio controls>
+                            <source src="${question.audio}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <ul>
+                            ${question.options.map((option, idx) => `
+                                <li class="${idx === question.correct ? 'correct' : ''} ${userAnswers[index] === idx && idx !== question.correct ? 'wrong' : ''}">
+                                    ${option}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    `;
+                    reviewContainer.appendChild(questionDiv);
+                });
+            });
+
+            backToResultsBtn.addEventListener('click', () => {
+                showScreen('results-screen');
+            });
+
+            restartBtn.addEventListener('click', () => {
+                location.reload();
+            });
+
+        });
+    </script>
+</body>
+</html>
