@@ -353,6 +353,7 @@
         <div id="question-counter">Question 1/5</div>
         <div id="question-container">
             <img id="question-image" src="" alt="Question Image">
+            <p id="mock-q1"></p>
            
             <div id="options">
                 <audio id="question-audio" src="" controls></audio>
@@ -563,42 +564,53 @@
                     correct: 1
                 },
                 {
-                    
+                    questions: ' A man and a women are talking. Where will they meet on Saturday?',
                     audio: 'audio/31.mp3',
                     options: ['かいしゃ', 'かいしゃのちかく', 'レストラン'],
                     correct: 1
                 },
                 {
+                    questions: ' A man and a women are talking. What time and where will they meet?',
                     image: 'img/32.png',
                     audio: 'audio/32.mp3',
                     options: ['A', 'B', 'C'],
                     correct: 1
                 },
                 {
+                    questions: ' A man and a women are talking. What does women do first?',
                     image: 'img/33.png',
                     audio: 'audio/33.mp3',
                     options: ['さとうをいれます', 'さとうをはいります', 'さとうをあげます'],
                     correct: 1
                 },
                 {
-                    image: 'img/34.png',
+                    questions: 'A man and a women are talking. How many ballpoints pen do women buy.?',
                     audio: 'audio/34.mp3',
                     options: ['1ぽん買います', '3ぼん買います', '12ほん買います'],
                     correct: 1
                 },
                 {
-                    image: 'img/35.png',
+                    questions: 'The man is calling to the hospital. When does the man go to hospital.?',
                     audio: 'audio/35.mp3',
                     options: ['おひるです', '今日いきません', '夜7時のあとです '],
                     correct: 1
                 }
                 ,
                 {
-                    image: 'img/36.png',
+                   questions: 'A man and a women are talking. where will they eat in  next week?',
+
                     audio: 'audio/36.mp3',
                     options: ['いつも行くレストランです', 'ホテルです', '女の人のうちです'],
                     correct: 1
-                }
+                },
+                {
+                   questions: 'She is going to school. What does she say.?',
+                   image: 'img/37.png',
+                    audio: 'audio/37.mp3',
+                    options: ['1', '2', '3'],
+                    correct: 1
+                },
+
 
                 // Add more questions here
             ];
@@ -624,8 +636,9 @@
            // for single selection
     function loadQuestion(index) {
     const question = questions[index];
-    document.getElementById('question-image').src = question.image;
+    const imgs = document.getElementById('question-image');
     
+    const qsnText = document.getElementById('mock-q1');
     const audioElement = document.getElementById('question-audio');
     if (question.audio) {
         audioElement.src = question.audio;
@@ -633,7 +646,19 @@
     } else {
         audioElement.style.display = 'none';
     }
+    if (question.questions) {
+        qsnText.innerText = question.questions
+        qsnText.style.display = 'block';
 
+    } else {
+         qsnText.style.display = 'none'
+    }
+    if (question.image) {
+        imgs.src = question.image;
+        imgs.style.display = 'block';
+    } else {
+        imgs.style.display = 'none'
+    }
     // Clear 'selected' class from all options
     optionBtns.forEach(btn => btn.classList.remove('selected'));
 
