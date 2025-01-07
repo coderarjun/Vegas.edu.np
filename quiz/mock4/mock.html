@@ -351,8 +351,11 @@
         <div id="timer">80:00</div>
         <div id="question-counter">Question 1/5</div>
         <div id="question-container">
-            <img id="question-image" src="" alt="Question Image">
-           
+            <div class="">
+
+                <p id="mock-q1"></p>
+                <img id="question-image" src="" alt="Question Image">
+            </div>
             <div id="options">
                 <audio id="question-audio" src="" controls></audio>
                 <button class="option-btn" data-answer="0">Option 1</button>
@@ -562,31 +565,35 @@
                     correct: 1
                 },
                 {
-                    image: 'img/31.png',
+                    questions: 'A teacher is talking to the students. What will students do first?',
                     audio: 'audio/31.mp3',
                     options: ['ばんごうをかく', 'かみをとる', 'すわってまつ', 'テニスをする'],
                     correct: 1
                 },
                 {
                     image: 'img/32.png',
+                    questions: 'A girl and a boy are talking in the class. What will girl buy.?',
                     audio: 'audio/32.mp3',
                     options: ['1', '2', '3', '4'],
                     correct: 1
                 },
                 {
                     image: 'img/33.png',
+                    questions: 'A women and a man are talking in a house. Where does the man put the vass.? ',
                     audio: 'audio/33.mp3',
                     options: ['1', '2', '3', '4'],
                     correct: 1
                 },
                 {
                     image: 'img/34.png',
+                    questions: "A man and a women are talking. Witch one is the women's coat.?",
                     audio: 'audio/34.mp3',
                     options: ['さとうをいれます', 'さとうをはいります', 'さとうをあげます'],
                     correct: 1
                 },
                 {
                     image: 'img/35.png',
+                    questions: '. A teacher and a student are talking in the school. What will the student do today.?',
                     audio: 'audio/35.mp3',
                     options: ['アとイ', 'アとイとゥ', 'ゥ', 'ゥとエ'],
                     correct: 1
@@ -594,20 +601,21 @@
                 ,
                 {
                     image: 'img/36.png',
+                    questions:' A man and a women are talking. To whom the man wants to speak to.?',
                     audio: 'audio/36.mp3',
                     options: ['1', '2', '3', '4'],
                     correct: 1
                 }
                 ,
                 {
-                    image: 'img/37.png',
+                    questions:'A man and a women are talking. How much does a taxi cost to the station.?',
                     audio: 'audio/37.mp3',
                     options: ['210', '250', '630', '750'],
                     correct: 1
                 }
                 ,
                 {
-                    image: 'img/38.png',
+                   questions: ' A man and a women are talking. Where are they going after this.? ',
                     audio: 'audio/38.mp3',
                     options: ['えいがかん', 'パンや', 'ぎんこう', 'レストラン'],
                     correct: 1
@@ -639,14 +647,27 @@
            // for single selection
     function loadQuestion(index) {
     const question = questions[index];
-    document.getElementById('question-image').src = question.image;
-    
+    const imgs = document.getElementById('question-image');
+    const qsnText = document.getElementById('mock-q1');
     const audioElement = document.getElementById('question-audio');
     if (question.audio) {
         audioElement.src = question.audio;
         audioElement.style.display = 'block';
     } else {
         audioElement.style.display = 'none';
+    }
+
+    if (question.image) {
+        imgs.src = question.image
+        imgs.style.display = 'block'
+    } else {
+        imgs.style.display = 'none'
+    }
+    if (question.questions) {
+        qsnText.innerHTML = question.questions
+        qsnText.style.display = 'block'
+    } else {
+        qsnText.style.display = 'none'
     }
 
     // Clear 'selected' class from all options
@@ -711,7 +732,7 @@
 
             quitBtnTop.addEventListener('click', () => {
                 if (confirm('Are you sure you want to quit the quiz?')) {
-                    window.location.href = "../quiz.html";
+                    window.location.href = "mock.html";
                 }
             });
 
