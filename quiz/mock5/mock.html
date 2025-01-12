@@ -352,6 +352,7 @@
         <div id="timer">80:00</div>
         <div id="question-counter">Question 1/5</div>
         <div id="question-container">
+            <p id="mock-q1"></p>
             <img id="question-image" src="" alt="Question Image">
            
             <div id="options">
@@ -598,70 +599,70 @@
                 }
                 ,
                 {
-                   
+                   questions:'Listen to the track and choose the correct answer.',
                     audio: 'audio/36.mp3',
                     options: ['1', '2', '3'],
                     correct: 1
                 }
                 ,
                 {
-                   
+                   questions:'Listen to the track and choose the correct answer. ',
                     audio: 'audio/37.mp3',
                     options: ['1', '2', '3'],
                     correct: 1
                 }
                 ,
                 {
-                   
+                   questions:'Listen to the track and choose the correct answer. ',
                     audio: 'audio/38.mp3',
                     options: ['1', '2', '3'],
                     correct: 1
                 }
                 ,
                 {
-                   
+                   questions:'Listen to the track and choose the correct answer. ',
                     audio: 'audio/39.mp3',
                     options: ['1', '2', '3'],
                     correct: 1
                 }
                 ,
                 {
-                   
+                   questions:'Listen to the track and choose the correct answer. ',
                     audio: 'audio/40.mp3',
                     options: ['1', '2', '3'],
                     correct: 1
                 }
                 ,
                 {
-                   
+                   questions:'Listen to the track and choose the correct answer. ',
                     audio: 'audio/41.mp3',
                     options: ['1', '2', '3'],
                     correct: 1
                 }
                 ,
                 {
-                 
+                 questions:'Listen to the track and choose the correct answer. ',
                     audio: 'audio/42.mp3',
                     options: ['1', '2', '3'],
                     correct: 1
                 }
                 ,
                 {
-                   
+                   questions:'Listen to the track and choose the correct answer. ',
                     audio: 'audio/43.mp3',
                     options: ['1', '2', '3'],
                     correct: 1
                 }
                 ,
                 {
-                   
+                   questions:'Listen to the track and choose the correct answer. ',
                     audio: 'audio/44.mp3',
                     options: ['1', '2', '3'],
                     correct: 1
                 }
                 ,
                 {
-                   
+                   questions:'Listen to the track and choose the correct answer. ',
                     audio: 'audio/45.mp3',
                     options: ['1', '2', '3'],
                     correct: 1
@@ -787,14 +788,28 @@
            // for single selection
     function loadQuestion(index) {
     const question = questions[index];
-    document.getElementById('question-image').src = question.image;
-    
+   const imgs =  document.getElementById('question-image');
+   const qsnText = document.getElementById('mock-q1');
+
     const audioElement = document.getElementById('question-audio');
     if (question.audio) {
         audioElement.src = question.audio;
         audioElement.style.display = 'block';
     } else {
         audioElement.style.display = 'none';
+    }
+    
+    if (question.image) {
+        imgs.src = question.image
+        imgs.style.display = 'block'
+    } else {
+        imgs.style.display = 'none'
+    }
+    if (question.questions) {
+        qsnText.innerHTML = question.questions
+        qsnText.style.display = 'block'
+    } else {
+        qsnText.style.display = 'none'
     }
 
     // Clear 'selected' class from all options
